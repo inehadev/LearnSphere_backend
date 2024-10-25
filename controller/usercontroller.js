@@ -41,7 +41,7 @@ const login = async (req, res) => {
         const existinguser = await User.findOne({ email });
 
         if (!existinguser) {
-            res.stats(400).json({ mesage: "user not found" })
+            res.status(400).json({ mesage: "user not found" })
         }
         const ispasswordMatch = await bcrypt.compare(password, existinguser.password);
 
@@ -61,6 +61,7 @@ const login = async (req, res) => {
 
 
 
+        
     } catch (error) {
         console.log("eror in login", error);
         res.status(500).json({ message: "eror in login", error })

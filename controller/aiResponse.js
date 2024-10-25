@@ -60,29 +60,29 @@ const Groq = require('groq-sdk');
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-const aiResponse = async (req, res) => {
+const aiResponse = async (req, res , next) => {
   try {
     const { stage, userTask, timeDuration, dailyTime } = req.body;
 
     let responseMessage = "";
     let messages = [];
 
-    // Handle conversation flow based on the current stage
+    
     if (!stage || stage === "askTask") {
-      // Ask the user what task they want the schedule for
+     
       responseMessage = "What would you like to create a schedule for?";
     } else if (stage === "askDuration" && userTask) {
-      // Ask for the total duration once task is provided
+      
       responseMessage = `Got it! How much time do you have to complete "${userTask}"? (e.g., 3 months, 6 months)`;
     } else if (stage === "askDailyTime" && timeDuration) {
-      // Ask for daily time commitment after duration is provided
+      
       responseMessage = `Great! Now, how much time can you give daily to "${userTask}"? (e.g., 1 hour, 2 hours)`;
     } else if (stage === "generateSchedule" && dailyTime) {
-      // Generate the final schedule after all information is collected
+     
       messages = [
         {
           role: "system",
-          content: "You are an AI assistant experienced in building custom timetables based on user requirements. Break down the task into sections, create a to-do list for each section, and make sure to  generate the output in only html  with inline CSS. Use tables and  use horizontal and vertical lines in tables for perfect view  to divide tasks by section and time, and include checkboxes for the to-dos."
+          content: "You are an AI assistant experienced in building custom timetables based on user requirements. Break down the task into sections, create a to-do list for each section, and make sure to  generate the ressponse  in only  html  with inline CSS and use color black(background) and white(text) for the table and in table there will be day ,  task , progress (progress will be based on user ) and referece section( (add content related or per day content related reference link) and one content section in which you have to provide per day content to learn. Use tables and  use horizontal and vertical lines in tables for perfect view  to divide tasks by section and time, and include checkboxes for the to-dos   and the response will have per day content which user have to learn like if user put 2 mothns duration then the resonse will have all 60 days schedule. The response will be catchy , neat or clean and provide the response according to the user provided time duration and per day time availability like what the user have to learn at day 1 then similarly for further days"
         },
         {
           role: 'user',
@@ -106,7 +106,7 @@ const aiResponse = async (req, res) => {
         },
         {
           role: 'assistant',
-          content: `Perfect, you can dedicate ${dailyTime} daily. Now I will generate a custom timetable for you.`
+          content: `You are an AI assistant that generates custom timetables. Generate a detailed day-by-day schedule for "${userTask}". Ensure the schedule spans ${timeDuration} days, with tasks spread evenly across each day. Each day should have its own task, progress checkbox, reference link, and content to learn. Make sure no days are skipped. Use inline CSS with a black background and white text, and generate a table with columns for "Day", "Task", "Progress", "Reference", and "Content to Learn". The tasks must be suitable for a person dedicating ${dailyTime} hours per day.`        
         },
         {
           role: 'user',
@@ -119,7 +119,7 @@ const aiResponse = async (req, res) => {
         model: "llama3-8b-8192",
       });
 
-      const messageContent = response.choices?.[0]?.message?.content || "No response content found";
+      const messageContent = response.choices?.[0]?.message?.content ||  "<p>No response content found</p>";
 
       return res.status(200).json({ message: messageContent });
     }
