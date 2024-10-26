@@ -82,16 +82,17 @@ const aiResponse = async (req, res , next) => {
       messages = [
         {
           role: "system",
-          content: "You are an AI assistant experienced in building custom timetables based on user requirements. Break down the task into sections, create a to-do list for each section, and make sure to  generate the ressponse  in only  html  with inline CSS and use color black(background) and white(text) for the table and in table there will be day ,  task , progress (progress will be based on user ) and referece section( (add content related or per day content related reference link) and one content section in which you have to provide per day content to learn. Use tables and  use horizontal and vertical lines in tables for perfect view  to divide tasks by section and time, and include checkboxes for the to-dos   and the response will have per day content which user have to learn like if user put 2 mothns duration then the resonse will have all 60 days schedule. The response will be catchy , neat or clean and provide the response according to the user provided time duration and per day time availability like what the user have to learn at day 1 then similarly for further days"
-        },
-        {
+          content: `You are an AI assistant experienced in building custom timetables. Generate an weekly based on the provide ${timeDuration}, detailed, weekly structured schedule in HTML with inline CSS. 
+          - Use a black background and white text. 
+          - Format the table with columns for "Day", "Task", "Progress", "Reference", and "Content to Learn". 
+          - Group tasks by week and ensure each day has specific learning content.
+          - Include checkboxes for task progress tracking.
+          - Ensure that each week's table is clearly separated.`
+      },        {
           role: 'user',
           content: `I want to create a schedule for "${userTask}".`
         },
-        {
-          role: 'assistant',
-          content: `Got it! The task is "${userTask}".`
-        },
+       
         {
           role: 'user',
           content: `I have ${timeDuration} to complete it.`
@@ -106,7 +107,7 @@ const aiResponse = async (req, res , next) => {
         },
         {
           role: 'assistant',
-          content: `You are an AI assistant that generates custom timetables. Generate a detailed day-by-day schedule for "${userTask}". Ensure the schedule spans ${timeDuration} days, with tasks spread evenly across each day. Each day should have its own task, progress checkbox, reference link, and content to learn. Make sure no days are skipped. Use inline CSS with a black background and white text, and generate a table with columns for "Day", "Task", "Progress", "Reference", and "Content to Learn". The tasks must be suitable for a person dedicating ${dailyTime} hours per day.`        
+          content: `You are an AI assistant that generates custom timetables. Generate a detailed per week schedule for "${userTask}". Ensure the schedule spans ${timeDuration} days, with tasks spread evenly across each day. Each day should have its own task, progress checkbox, reference link, and content to learn. Make sure no days are skipped. Use inline CSS with a black background and white text, and generate a table with columns for "Day", "Task", "Progress", "Reference", and "Content to Learn". The tasks must be suitable for a person dedicating ${dailyTime} hours per day.`        
         },
         {
           role: 'user',
