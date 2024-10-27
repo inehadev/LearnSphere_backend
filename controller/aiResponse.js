@@ -1,60 +1,4 @@
 
-// const  Groq =  require('groq-sdk');
-
-// const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-
-
-
-// const aiResponse = async (req, res) => {
-//   const { userTask }= req.body.userTask || ""
-//   const {timeDuration} = req.body.timeDuration || ""
-//   const { dailyTime}= req.body.dailyTime || ""
-
-//  const response= await  groq.chat.completions.create({
-  
-//     messages: [
-//       {
-//         role: "system",
-//         content: "You are an ai assitant who are experinced with building custom timetable based on user requirement , you have to breakdown the task into section with each section you have to create a todo list for that , make sure to generate the output in html format with inline css , you can make table for better dividing task section and their time alloted , use checkboxes for todos  and you can also add referece section for there todos aand provide link for their learning ",
-//       },
-//       {
-//         role:'user',
-//         content:`I want to create a schedule for ${userTask}`
-//       },
-//       {
-//         role:'assistant',
-//         content:`${timeDuration} where I can give ${dailyTime}`
-//       },
-//       {
-//         role:'user',
-//         content:`Great, I have all the necessary information. I will now generate the timetable for ${userTask}`
-//       },
-//       {
-//         role:'assistant',
-//         content:'Okhay I got all neccessry information , now i will generate the time table '
-//       },
-//       {
-//         role:'user',
-//         content:'Make sure to generate the output in html format , you can use inline css for tableas and bulletpoints or extra , make sure to generate checkbox that need to be clickable'
-//       }
-//     ],
-//     model: "llama3-8b-8192",
-//   });
- 
-//   // console.log("Full API Response:", response);
-//   console.log(response.choices[0]?.message?.content || "");
-//   const messageContent = response.choices?.[0]?.message?.content || "No response content found";
-//     console.log(messageContent);
-
-//     res.status(200).json({ message: messageContent });
-
-// }
-
-
-// module.exports = { aiResponse };
-
-
-
 
 const Groq = require('groq-sdk');
 
@@ -71,47 +15,29 @@ const aiResponse = async (req, res , next) => {
     if (!stage || stage === "askTask") {
      
       responseMessage = "What would you like to create a schedule for?";
-    } else if (stage === "askDuration" && userTask) {
-      
-      responseMessage = `Got it! How much time do you have to complete "${userTask}"? (e.g., 3 months, 6 months)`;
-    } else if (stage === "askDailyTime" && timeDuration) {
-      
-      responseMessage = `Great! Now, how much time can you give daily to "${userTask}"? (e.g., 1 hour, 2 hours)`;
-    } else if (stage === "generateSchedule" && dailyTime) {
-     
+    } 
+   
       messages = [
         {
           role: "system",
-          content: `You are an AI assistant experienced in building custom timetables. Generate an weekly based on the provide ${timeDuration}, detailed, weekly structured schedule in HTML with inline CSS. 
-          - Use a black background and white text. 
-          - Format the table with columns for "Day", "Task", "Progress", "Reference", and "Content to Learn". 
-          - Group tasks by week and ensure each day has specific learning content.
-          - Include checkboxes for task progress tracking.
-          - Ensure that each week's table is clearly separated.`
-      },        {
-          role: 'user',
-          content: `I want to create a schedule for "${userTask}".`
-        },
+          content: `You are an AI assistant experienced in creating learning schedules. Using your understanding, create a custom learning schedule for the provided ${userTask} with optimized durations for each module based on essential learning needs for beginners to intermediate learners. The schedule should cover foundational concepts, progress to more complex topics, and include practice exercises or projects, concluding with a final project to solidify learning. 
+
+                Generate this as a table in HTML with inline CSS. Include columns for "Day," "Task," "Progress," "Reference," and "Content to Learn." Adjust the timeline for each topic to ensure effective pacing, providing enough time for skill building without overwhelming or underestimating the necessary learning duration. 
+                - use horizontal and vertical line for the table `
+      },   
        
+      {
+        role: 'user',
+        content: `I want to create a schedule for "${userTask}".`
+      },
+      {
+        role: 'assistant',
+        content: `You are an AI assistant experienced in creating learning schedules. Using your understanding, create a custom learning schedule for the provided ${userTask} with optimized durations for each module based on essential learning needs for beginners to intermediate learners. The schedule should cover foundational concepts, progress to more complex topics, and include practice exercises or projects, concluding with a final project to solidify learning. 
+                    Generate this as a table in HTML with inline CSS. Include columns for  "Task," "Progress," "Reference," and "Content to Learn." Adjust the timeline for each topic to ensure effective pacing, providing enough time for skill building without overwhelming or underestimating the necessary learning duration. 
+`      },
         {
           role: 'user',
-          content: `I have ${timeDuration} to complete it.`
-        },
-        {
-          role: 'assistant',
-          content: `Great, you have ${timeDuration}.`
-        },
-        {
-          role: 'user',
-          content: `I can dedicate ${dailyTime} per day.`
-        },
-        {
-          role: 'assistant',
-          content: `You are an AI assistant that generates custom timetables. Generate a detailed per week schedule for "${userTask}". Ensure the schedule spans ${timeDuration} days, with tasks spread evenly across each day. Each day should have its own task, progress checkbox, reference link, and content to learn. Make sure no days are skipped. Use inline CSS with a black background and white text, and generate a table with columns for "Day", "Task", "Progress", "Reference", and "Content to Learn". The tasks must be suitable for a person dedicating ${dailyTime} hours per day.`        
-        },
-        {
-          role: 'user',
-          content: 'Please generate the output in HTML format, including a detailed breakdown with tables and checkboxes.'
+          content: 'Please generate the output in HTML format, use black backgorund and white text'
         }
       ];
 
@@ -124,9 +50,11 @@ const aiResponse = async (req, res , next) => {
 
       return res.status(200).json({ message: messageContent });
     }
+  
 
-    res.status(200).json({ message: responseMessage });
-  } catch (error) {
+    
+  
+   catch (error) {
     console.error('Error in AI response generation:', error);
     res.status(500).json({ error: 'An error occurred while generating the response.' });
   }
