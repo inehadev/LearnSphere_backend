@@ -20,10 +20,17 @@ const aiResponse = async (req, res , next) => {
       messages = [
         {
           role: "system",
-          content: `You are an AI assistant experienced in creating learning schedules. Using your understanding, create a custom learning schedule for the provided ${userTask} with optimized durations for each module based on essential learning needs for beginners to intermediate learners. The schedule should cover foundational concepts, progress to more complex topics, and include practice exercises or projects, concluding with a final project to solidify learning. 
+          content: `You are an AI assistant specializing in creating optimized learning schedules OR roadmap. Your goal is to create a learning schedule or roadmap for the provided task ("${userTask}"). 
+                  If a specific time duration is not provided, determine the most effective total learning time based on the complexity of the task 
+                   .
+                  
+                    The schedule should:
+                    1. Cover foundational concepts, progressing to intermediate and advanced topics.
+                    2. Include practice exercises, projects, and a final project to solidify learning.
+                    3. Be formatted as an HTML table with inline CSS using a black background, white text, and use  horizontal and vertical lines to make table look clean and user friendly.
 
-                Generate this as a table in HTML with inline CSS. Include columns for "Day," "Task," "Progress," "Reference," and "Content to Learn." Adjust the timeline for each topic to ensure effective pacing, providing enough time for skill building without overwhelming or underestimating the necessary learning duration. 
-                - use horizontal and vertical line for the table `
+                  Please include columns for  "Task," "Reference,"  "Content to Learn" and "Duration to ensure a structured learning journey that balances depth and pacing without overwhelming the user.
+`
       },   
        
       {
@@ -32,12 +39,11 @@ const aiResponse = async (req, res , next) => {
       },
       {
         role: 'assistant',
-        content: `You are an AI assistant experienced in creating learning schedules. Using your understanding, create a custom learning schedule for the provided ${userTask} with optimized durations for each module based on essential learning needs for beginners to intermediate learners. The schedule should cover foundational concepts, progress to more complex topics, and include practice exercises or projects, concluding with a final project to solidify learning. 
-                    Generate this as a table in HTML with inline CSS. Include columns for  "Task," "Progress," "Reference," and "Content to Learn." Adjust the timeline for each topic to ensure effective pacing, providing enough time for skill building without overwhelming or underestimating the necessary learning duration. 
-`      },
+        content: `okay i got it , i will create scedule for the "${userTask}".`
+      },
         {
           role: 'user',
-          content: 'Please generate the output in HTML format, use black backgorund and white text'
+          content: 'Please generate the output in HTML format, use  white text dont generate anything else rather than schedule'
         }
       ];
 
