@@ -55,6 +55,7 @@ const aiResponse = async (req, res , next) => {
       const messageContent = response.choices?.[0]?.message?.content ||  "<p>No response content found</p>";
 
       return res.status(200).json({ message: messageContent });
+      
     }
   
 
