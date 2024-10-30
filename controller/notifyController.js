@@ -1,16 +1,33 @@
-// const cron = require('node-cron');
-// const { sendNotificationToUser } = require('./notificationService'); // Function to notify the user
+const cron = require('node-cron');
+// const { sendNotificationToUser } = require('./notificationService');
 
-// // Run every 24 hours
-// cron.schedule('0 0 * * *', async () => {
-//   const users = await getUsersWithTasks(); // Fetch users who have tasks
+const exportdata=()=>{
+    const name= "HELLO NEHA";
+    console.log(`export data ${name}`);
+}
+ const notifyController = (req,res)=>{
+    
+const cronExpression = '*/5 * * * *';
+const isValid = cron.validate(cronExpression);
+console.log(`the cronExpression is valid`);
+
+cron.schedule(  cronExpression, async () => {
+//   const users = await getUsersWithTasks(); 
 
 //   for (const user of users) {
-//     const nextTask = await getNextTaskForUser(user.id); // Get the next unnotified task
+//     const nextTask = await getNextTaskForUser(user.id);
 
 //     if (nextTask) {
-//       await sendNotificationToUser(user, nextTask); // Notify the user about the task
-//       await markTaskAsNotified(user.id, nextTask); // Mark task as notified
+//       await sendNotificationToUser(user, nextTask);
+//       await markTaskAsNotified(user.id, nextTask); 
 //     }
 //   }
-// }
+const response = exportdata();
+res.status(200).json(response)
+
+}
+)
+
+ }
+
+ module.exports={notifyController};
