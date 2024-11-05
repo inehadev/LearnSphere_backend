@@ -13,49 +13,43 @@ const aiResponse = async (req, res, next) => {
       responseMessage = "What would you like to create a schedule for?";
     }
 
+
     
 
     messages = [
+      
       {
         role: "system",
-        content: `You are an AI assistant specializing in creating optimized learning schedules or roadmaps. 
-                  Your goal is to create a learning schedule for the provided task ("${userTask}"). 
-                  Analyze whether this ${userTask} is suitable for a learning schedule. 
-                  If it is not related to scheduling, respond that this ${userTask} is not suitable and do not generate a schedule.
-                  
-                  If the ${userTask} is valid, create a schedule using general topics instead of specific names. 
-                  Avoid using the term "Neha" or any specific product or service name. 
-                  Create a structured schedule based on foundational concepts, intermediate, and advanced topics, 
-                  including practice exercises and projects. Format the output as an HTML table with inline CSS using a black background, white text, and clear horizontal and vertical lines.
-    
-                  Include columns for "Day", "Task", "Reference", "Content to Learn", and "Duration".`
+          content: `You are an AI assistant specializing in creating personalized learning schedules. When a user provides a task, 
+                    analyze its relevance to education, technology, or programming. If the task is irrelevant (such as a name, place,
+                     or non-educational concept), respond only with the message:
+                     "I apologize, but '{userTask}' is not a task or subject related to education, technology, or programming. Therefore, 
+                     a learning schedule is not relevant for this task. However, if you'd like to provide a different task or subject, I'd be
+                      happy to assist you in creating a personalized learning schedule."
+                     
+                     Do not generate any example tables or additional information in this case.
+                     
+                     If the task is relevant, proceed to create a detailed HTML table schedule formatted with inline CSS for a black background 
+                     and white text with clean borders for readability. The table should include:
+                     - **Day**: Sequential day of the schedule.
+                     - **Task**: Daily learning task description.
+                     - **Content to Learn**: Key concepts or skills for the day.
+                     - **Reference**: Useful resources (like official docs or popular tutorials , provide official docs links).
+                     - **Duration**: Estimated time for each day’s task.`
+        },
+        
+      {
+        role: "user",
+        content: `Please create a schedule for "${userTask}".`,
+      },
+      {
+        role: "assistant",
+        content: `I’ll first check if "${userTask}" is appropriate for a structured learning schedule. If it is, I’ll proceed with creating it.`,
       },
       {
         role: "user",
-        content: `I want to create a schedule for "${userTask}".`,
+        content: "Generate the schedule as an HTML table with white text on a black background, please.",
       },
-      {
-        role: "assistant",
-        content: `First, let's analyze if "${userTask}" is suitable for creating a learning schedule. 
-                  If it is related to learning topics, I will proceed to create a schedule. 
-                  Otherwise, I will inform the user that this task is not suitable.`,
-      },
-      {
-        role: "assistant",
-        content: `okay i got it , i will create scedule for the "${userTask}".`,
-      },
-      
-      {
-        role: "assistant",
-        content: `You only need to generate output if the task is related to technology otherwise return i am not unable to process this".`,
-      },
-      
-      {
-        role: "user",
-        content:
-          "Please generate the output in HTML format, use  white text dont generate anything else rather than schedule",
-      },
-      
     ];
 
     const response = await groq.chat.completions.create({
